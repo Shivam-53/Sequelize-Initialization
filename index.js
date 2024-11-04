@@ -1,5 +1,5 @@
 import { Sequelize, DataTypes, INTEGER } from "sequelize";
-const sequelize = new Sequelize("postgres://postgres:1234@localhost:5432/test");
+const sequelize = new Sequelize(process.env.uri);
 
 const User = sequelize.define('user', {
     name: DataTypes.TEXT,
