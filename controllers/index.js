@@ -90,4 +90,24 @@ const deleteAllData = async (req, res) => {
 }
 
 
-module.exports={createData,getAllData,getSpecificData,updateData,deleteAllData,deleteData}
+
+const testTransaction=async(req,res)=>{
+    let tran= await sequelize.transaction();
+    try {
+        console.log("hello");
+
+        const data= await User.create({name:"Vaibhav",age:20},{transaction:tran})
+        if(data!=String){ // to force error, to check if transaction is working properly
+            throw Error;  
+        }
+        res.send("done")
+        await tran.commit();
+
+    } catch (error) {
+        await tran.rollback();
+        console.log("error");
+        
+    }
+}
+
+module.exports={createData,getAllData,getSpecificData,updateData,deleteAllData,deleteData,testTransaction}
