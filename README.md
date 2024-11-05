@@ -1,6 +1,6 @@
 A simple API for initialising for CRUD using sequeslize ORM and postgres database.
 
-Use it for refrence!!
+Use it for reference!!
 
 Requirements
 
