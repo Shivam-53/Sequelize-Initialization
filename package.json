@@ -11,7 +11,7 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "index.js": "node --env-file=.env index.js",
+    "index.js": " node --env-file=.env index.js",
     "test": "node --env-file=.env index.js"
   },
   "keywords": [],

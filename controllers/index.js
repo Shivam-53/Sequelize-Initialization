@@ -1,14 +1,24 @@
 const { Sequelize, DataTypes } = require("sequelize")
 const sequelize = new Sequelize(process.env.uri);
-const {User} =require("../models/model")
+const {db}=require("../models/helper")
+const user=db.data;
 
 const createData = async (req, res) => {
     try {
-        await sequelize.sync({ force: false });
+        console.log(db.data.user)
+        const Data=req.body;
+        console.log(Data);
+        
+        await sequelize.sync({ force: true });
         await sequelize.authenticate();
+
+        const UserData={
+            "name":Data.name,
+            "age":Data.age
+        }
         console.log("success");
-        const data = User.build({ "name": "Shivam ", "age": 18 })
-        await data.save();
+        const savedData = user.create(UserData)
+        // await user.save(savedData);
         res.send("Created")
     } catch (error) {
         console.log("fail ", error);
@@ -19,7 +29,7 @@ const createData = async (req, res) => {
 const getAllData = async (req, res) => {
     try {
         await sequelize.sync({ force: false });
-        const data = await User.findAll();
+        const data = await user.findAll();
         console.log('All users:', JSON.stringify(data));
         res.json(data)
     } catch (error) {
@@ -29,9 +39,11 @@ const getAllData = async (req, res) => {
 
 const getSpecificData = async (req, res) => {
     try {
-        const data = await User.findAll({
+        const findData=req.params.id;
+
+        const data = await user.findAll({
             raw: true,
-            where: { id: 6 }
+            where: { id: findData }
         });
         console.log((data))
         res.json(data)
@@ -43,20 +55,16 @@ const getSpecificData = async (req, res) => {
 
 const updateData = async (req, res) => {
     try {
-        const data = await User.update({
-            name: "rajesh"
+        const num=req.params.id;
+        const newName=req.params.name;
+        const data = await user.update({
+            name: newName
         }, {
-            where: { id: 7 }
+            where: { id: num }
         })
 
-        const check = await User.findAll({
-            raw: true,
-            where: { id: 7 }
-        })
 
-        console.log(check);
-    
-        res.json(check)
+        res.json(data)
     } catch (error) {
         console.log(error);
 
@@ -67,9 +75,10 @@ const updateData = async (req, res) => {
 
 const deleteData = async (req, res) => {
     try {
-        await User.destroy({
+        const userid=req.params.id;
+        await user.destroy({
             where: {
-                id: 7
+                id: userid
             }
         })
         res.send("DELETED")
@@ -80,7 +89,7 @@ const deleteData = async (req, res) => {
 
 const deleteAllData = async (req, res) => {
     try {
-        await User.destroy({
+        await user.destroy({
             truncate: true
         })
         res.json({})
@@ -96,7 +105,7 @@ const testTransaction=async(req,res)=>{
     try {
         console.log("hello");
 
-        const data= await User.create({name:"Vaibhav",age:20},{transaction:tran})
+        const data= await user.create({name:"Vaibhav",age:20},{transaction:tran})
         if(data!=String){ // to force error, to check if transaction is working properly
             throw Error;  
         }

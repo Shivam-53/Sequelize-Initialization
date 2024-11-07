@@ -1,10 +1,9 @@
-const {Sequelize,DataTypes} =require("sequelize")
-const sequelize = new Sequelize(process.env.uri);
-
- const User = sequelize.define('user', {
-    name: DataTypes.TEXT,
-    age: DataTypes.INTEGER,
+module.exports =(sequelize,Sequelize)=>{
+const User = sequelize.define('user', {
+    name: Sequelize.TEXT,
+    age: Sequelize.INTEGER,
 })
+return User;
+}
 
-module.exports={User};
 
